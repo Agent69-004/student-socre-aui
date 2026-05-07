@@ -3,491 +3,470 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>Campus Icon · AUI | next‑gen reputation OS</title>
-  <!-- Fonts & Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Cabinet+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Campus Icon · AUI | Falcon Reputation System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      cursor: none;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     :root {
-      --neon-glow: 0 0 8px #0aff9d, 0 0 2px #0aff9d;
-      --card-glass: rgba(20, 28, 40, 0.65);
-      --border-neon: rgba(10, 255, 157, 0.4);
+      --aui-green: #1A5632;
+      --aui-green-light: #267d49;
+      --aui-red: #D33A35;
+      --aui-gray-light: #DEDEDE;
+      --aui-gray-bg: #f8f8f8;
+      --aui-text-dark: #1D1D1B;
+      --aui-text-muted: #5f5f5f;
+      --aui-border: #e5e7eb;
+      --shadow-sm: 0 1px 3px 0 rgba(0,0,0,0.1),0 1px 2px 0 rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1),0 2px 4px -1px rgba(0,0,0,0.06);
+      --bg-body: #ffffff;
+      --card-bg: #ffffff;
+      --text-primary: #1D1D1B;
+    }
+    body.dark {
+      --aui-green: #2d8c5a;
+      --aui-gray-bg: #1e1e2a;
+      --bg-body: #121212;
+      --card-bg: #1e1e2a;
+      --aui-border: #2d2d3a;
+      --text-primary: #eef5ff;
+      --aui-text-muted: #a0a0b0;
     }
     body {
-      font-family: 'Cabinet Grotesk', sans-serif;
-      background: radial-gradient(circle at 10% 20%, #0a0f1c, #03050b);
-      color: #eef5ff;
-      overflow-x: hidden;
-      min-height: 100vh;
+      font-family: 'Open Sans', 'Inter', sans-serif;
+      background: var(--bg-body);
+      color: var(--text-primary);
+      line-height: 1.5;
+      transition: background 0.2s, color 0.2s;
     }
-    /* custom cursor */
-    .cursor-ring {
-      width: 28px;
-      height: 28px;
-      border: 2px solid #0aff9d;
-      border-radius: 50%;
-      position: fixed;
-      pointer-events: none;
-      z-index: 9999;
-      transition: transform 0.1s, width 0.2s, height 0.2s;
-      transform: translate(-50%, -50%);
-      backdrop-filter: blur(2px);
-    }
-    .cursor-dot {
-      width: 4px;
-      height: 4px;
-      background: #ff2a6d;
-      border-radius: 50%;
-      position: fixed;
-      pointer-events: none;
-      z-index: 10000;
-      transition: transform 0.05s;
-    }
-    /* canvas background */
-    #bgCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      pointer-events: none;
-    }
-    /* main container */
-    .app-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 20px 24px 60px;
-      position: relative;
-      z-index: 2;
-    }
-    /* glassmorphic cards */
-    .card-glow {
-      background: rgba(12, 18, 32, 0.55);
-      backdrop-filter: blur(12px);
-      border-radius: 32px;
-      border: 1px solid rgba(10, 255, 157, 0.25);
-      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.05);
-      transition: transform 0.2s ease, box-shadow 0.2s;
+    .app-container { max-width: 1400px; margin: 0 auto; padding: 24px 32px 48px; }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--aui-border);
+      transition: box-shadow 0.2s;
       margin-bottom: 24px;
     }
-    .card-glow:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 28px 40px -16px rgba(0,255,157,0.2);
-      border-color: rgba(10,255,157,0.6);
-    }
-    /* top bar */
-    .top-bar-neon {
+    .card-header { padding: 20px 24px 12px; border-bottom: 1px solid var(--aui-border); font-weight: 600; font-size: 1.1rem; }
+    .card-body { padding: 20px 24px; }
+    .portal-top-bar {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 12px 24px;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(16px);
-      border-radius: 80px;
-      margin-bottom: 28px;
-      border: 1px solid rgba(10,255,157,0.3);
-    }
-    .logo {
-      font-family: 'Clash Display', sans-serif;
-      font-weight: 700;
-      font-size: 1.8rem;
-      background: linear-gradient(125deg, #fff, #0aff9d, #ff2a6d);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    /* ticker */
-    .ticker {
-      background: rgba(0,0,0,0.5);
-      backdrop-filter: blur(8px);
-      border-radius: 40px;
-      padding: 6px 16px;
-      white-space: nowrap;
-      overflow-x: auto;
-      scrollbar-width: none;
+      padding: 12px 0 20px;
       margin-bottom: 20px;
-      border-left: 3px solid #0aff9d;
+      border-bottom: 1px solid var(--aui-border);
+      flex-wrap: wrap;
     }
-    .ticker-content {
-      display: inline-block;
-      font-size: 0.75rem;
-      animation: scrollTicker 18s linear infinite;
-    }
-    @keyframes scrollTicker {
-      0% { transform: translateX(100%); }
-      100% { transform: translateX(-100%); }
-    }
-    /* stats grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(4,1fr);
-      gap: 20px;
-      margin: 20px 0;
-    }
-    /* leaderboard podium */
-    .podium {
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 20px;
-      margin: 40px 0;
-    }
-    .podium-item {
-      text-align: center;
-      background: rgba(0,0,0,0.5);
-      padding: 12px;
-      border-radius: 20px;
-      width: 100px;
-    }
-    .podium-1 { order: 2; height: 140px; background: linear-gradient(0deg, #ffd700, #b8860b);}
-    .podium-2 { order: 1; height: 100px; background: #c0c0c0; }
-    .podium-3 { order: 3; height: 80px; background: #cd7f32; }
-    /* heatmap */
-    .heatmap-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 6px;
-      background: rgba(0,0,0,0.3);
-      padding: 12px;
-      border-radius: 20px;
-    }
-    .heat-cell {
-      aspect-ratio: 1 / 1;
-      border-radius: 6px;
-      background: #2a2e3c;
-    }
-    /* mission ring */
-    .mission-progress {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: conic-gradient(#0aff9d 0deg 0deg, #2a2e3c 0deg);
-    }
-    /* Floating +/- */
-    .float-point {
-      position: fixed;
-      font-weight: 800;
-      font-size: 1.2rem;
-      pointer-events: none;
-      animation: floatUp 1s ease-out forwards;
-      z-index: 10000;
-    }
-    @keyframes floatUp {
-      0% { opacity: 1; transform: translateY(0); }
-      100% { opacity: 0; transform: translateY(-40px); }
-    }
-    /* sparkline svg */
-    .area-chart { width: 100%; height: 80px; margin: 16px 0; }
-    /* swipe tabs */
-    .tabs {
-      display: flex;
-      overflow-x: auto;
-      gap: 8px;
-      scroll-snap-type: x mandatory;
-    }
-    /* responsive */
-    @media (max-width: 700px) {
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon { background: var(--aui-green); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.4rem; color: white; }
+    .portal-title { font-size: 1.5rem; font-weight: 700; color: var(--aui-green); }
+    .user-area { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    .avatar { width: 46px; height: 46px; background: var(--aui-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: white; }
+    .tabs { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; border-bottom: 1px solid var(--aui-border); padding-bottom: 8px; }
+    .tab-btn { background: transparent; border: none; padding: 10px 24px; border-radius: 40px; font-weight: 600; color: var(--aui-text-muted); cursor: pointer; transition: 0.1s; }
+    .tab-btn.active { background: var(--aui-green); color: white; }
+    .panel { display: none; animation: fade 0.25s; }
+    .panel.active { display: block; }
+    @keyframes fade { from { opacity:0; transform:translateY(6px);} to{ opacity:1; transform:translateY(0);} }
+    .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 20px; margin: 20px 0; }
+    .stat-card { background: var(--aui-gray-bg); border-radius: 16px; padding: 16px; text-align: center; }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--aui-green); }
+    .progress-section { margin: 16px 0; }
+    .progress-bar { background: var(--aui-gray-light); border-radius: 20px; height: 8px; overflow: hidden; margin-top: 6px; }
+    .progress-fill { background: var(--aui-green); width: 0%; height: 100%; border-radius: 20px; }
+    .action-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+    .action-btn { background: var(--aui-gray-bg); border: 1px solid var(--aui-border); padding: 12px 20px; border-radius: 40px; cursor: pointer; font-weight: 500; transition: 0.1s; min-height: 48px; }
+    .action-btn.negative { background: #fee2e2; border-color: #fecaca; color: var(--aui-red); }
+    .action-btn:hover { background: var(--aui-green); color: white; border-color: var(--aui-green); }
+    .mission-chip { background: var(--aui-gray-bg); border-radius: 60px; padding: 10px 20px; display: inline-flex; align-items: center; gap: 12px; margin: 6px 8px 6px 0; }
+    .claim-btn { background: var(--aui-green); border: none; color: white; padding: 6px 16px; border-radius: 40px; cursor: pointer; font-size: 0.75rem; }
+    .feed-list { max-height: 320px; overflow-y: auto; }
+    .feed-item { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--aui-border); flex-wrap: wrap; }
+    .lb-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--aui-border); }
+    .lb-rank { width: 48px; font-weight: 700; color: var(--aui-green); }
+    .ai-chat { background: var(--aui-gray-bg); border-radius: 20px; padding: 20px; }
+    .chat-bubble { background: var(--card-bg); border-radius: 20px; padding: 12px 18px; margin: 12px 0; max-width: 85%; box-shadow: var(--shadow-sm); }
+    .chat-bubble.user { background: var(--aui-green); color: white; margin-left: auto; }
+    .ai-input-row { display: flex; gap: 12px; margin-top: 20px; }
+    .ai-input-row input { flex: 1; border: 1px solid var(--aui-border); border-radius: 60px; padding: 14px 20px; background: var(--card-bg); color: var(--text-primary); }
+    .appeal-box, .endorse-search { background: var(--aui-gray-bg); border-radius: 20px; padding: 16px; margin-top: 16px; }
+    textarea { width: 100%; border-radius: 16px; border: 1px solid var(--aui-border); padding: 12px; background: var(--card-bg); color: var(--text-primary); resize: vertical; }
+    .sparkline { display: flex; gap: 4px; align-items: flex-end; height: 60px; margin: 16px 0; }
+    .spark-bar { background: var(--aui-green); width: 12px; border-radius: 4px; transition: height 0.2s; }
+    .event-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--aui-border); }
+    .rsvp-btn { background: var(--aui-green); border: none; padding: 6px 14px; border-radius: 40px; color: white; cursor: pointer; }
+    .toast { position: fixed; bottom: 24px; right: 24px; background: var(--aui-green); color: white; padding: 12px 24px; border-radius: 40px; z-index: 3000; opacity: 0; transition: opacity 0.2s; pointer-events: none; }
+    .dark-toggle { background: var(--aui-gray-bg); border: 1px solid var(--aui-border); padding: 8px 14px; border-radius: 40px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
+    .radar-svg { width: 100%; max-width: 300px; margin: 0 auto; display: block; }
+    @media (max-width: 800px) {
       .stats-grid { grid-template-columns: repeat(2,1fr); }
-      .podium-item { width: 70px; }
+      .app-container { padding: 16px; }
+      .tab-btn { padding: 8px 16px; font-size: 0.8rem; }
     }
-    button, .tab-btn, .action-btn { cursor: pointer; transition: 0.1s; }
-    button:active { transform: scale(0.97); }
+    button { cursor: pointer; }
   </style>
 </head>
 <body>
+<div class="toast" id="toastMsg"></div>
 
-<canvas id="bgCanvas"></canvas>
-<div class="cursor-ring" id="cursorRing"></div>
-<div class="cursor-dot" id="cursorDot"></div>
-
-<div id="loginOverlay" style="position:fixed; inset:0; background:#03050bf2; backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center; z-index:5000;">
-  <div class="card-glow" style="width:400px; padding:40px; text-align:center;">
-    <h1 class="logo">CAMPUS ICON</h1>
-    <p style="margin:12px 0 24px">Al Akhawayn · reputation nexus</p>
-    <input type="text" id="loginId" placeholder="Student ID" style="width:100%; padding:14px; border-radius:60px; background:#11141f; border:1px solid #0aff9d; color:white; margin-bottom:12px;">
-    <input type="password" id="loginPw" placeholder="any (demo)" style="width:100%; padding:14px; border-radius:60px; background:#11141f; border:1px solid #0aff9d; margin-bottom:24px;">
-    <button id="doLoginBtn" style="background:#0aff9d; color:#03050b; border:none; width:100%; padding:14px; border-radius:60px; font-weight:800;">⚡ ENTER GRID</button>
-    <div style="margin-top:16px"><span id="quickDemo" style="color:#0aff9d; cursor:pointer;">✨ demo access</span></div>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen" style="position:fixed; inset:0; background:var(--bg-body); backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; z-index:4000;">
+  <div class="card" style="width:440px; padding:40px; text-align:center;">
+    <div class="logo-icon" style="margin:0 auto 20px; width:70px; height:70px; font-size:2rem;">🎓</div>
+    <h2 style="color:var(--aui-green);">CAMPUS ICON</h2>
+    <p style="margin-bottom:28px;">Al Akhawayn University · Falcon Reputation System</p>
+    <input type="text" id="loginId" placeholder="Student ID" style="width:100%; padding:14px; border-radius:12px; border:1px solid var(--aui-border); margin-bottom:16px; background:var(--card-bg); color:var(--text-primary);">
+    <input type="password" id="loginPw" placeholder="Password (any demo)" style="width:100%; padding:14px; border-radius:12px; border:1px solid var(--aui-border); margin-bottom:24px; background:var(--card-bg);">
+    <button id="doLoginBtn" style="background:var(--aui-green); color:white; border:none; width:100%; padding:14px; border-radius:40px; font-weight:600;">Sign in →</button>
+    <div style="margin-top:20px; font-size:13px"><span id="quickDemo" style="color:var(--aui-green); cursor:pointer;">demo access (any credentials)</span></div>
   </div>
 </div>
 
+<!-- MAIN DASHBOARD -->
 <div id="dashboard" class="app-container" style="display:none">
-  <div class="top-bar-neon">
-    <div class="logo">⎚ CAMPUS ICON</div>
-    <div><button id="darkToggle" style="background:transparent; border:1px solid #0aff9d; border-radius:40px; padding:6px 14px; color:#0aff9d;">🌙 DARK</button></div>
-    <div style="display:flex; gap:20px; align-items:center">
-      <div class="avatar" id="userAvatar" style="width:44px;height:44px;background:#ff2a6d; border-radius:60px; display:flex; align-items:center; justify-content:center;">WD</div>
-      <span id="userNameDisplay"></span>
-      <button id="logoutBtn" style="background:transparent; border:1px solid rgba(255,255,255,0.3); border-radius:40px; padding:6px 14px;">exit</button>
+  <div class="portal-top-bar">
+    <div class="logo-area">
+      <div class="logo-icon">🎓</div>
+      <div class="portal-title">Campus Icon</div>
+      <span style="font-size:0.75rem; background:var(--aui-gray-bg); padding:4px 12px; border-radius:40px;">Falcon</span>
+    </div>
+    <div class="user-area">
+      <button id="darkModeToggle" class="dark-toggle"><i class="ti ti-moon"></i> Dark</button>
+      <div class="avatar" id="userAvatar">RK</div>
+      <span id="userNameDisplay" style="font-weight:500"></span>
+      <button class="logout-btn" id="logoutBtn" style="background:transparent; border:1px solid var(--aui-border); padding:8px 18px; border-radius:40px;">Exit</button>
     </div>
   </div>
 
-  <!-- LIVE TICKER -->
-  <div class="ticker" id="liveTicker"></div>
-
-  <div class="tabs" id="tabContainer">
-    <button class="tab-btn active" data-tab="overview">📡 DASH</button>
-    <button class="tab-btn" data-tab="missions">🎯 QUESTS</button>
-    <button class="tab-btn" data-tab="leaderboard">🏆 LEADERS</button>
-    <button class="tab-btn" data-tab="ai">🧠 AURA AI</button>
-    <button class="tab-btn" data-tab="calendar">📅 EVENTS</button>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="overview">📊 Dashboard</button>
+    <button class="tab-btn" data-tab="profile">👤 Profile</button>
+    <button class="tab-btn" data-tab="endorse">🤝 Endorse</button>
+    <button class="tab-btn" data-tab="leaderboard">🏆 Leaders</button>
+    <button class="tab-btn" data-tab="ai">🧠 AI Mentor</button>
+    <button class="tab-btn" data-tab="calendar">📅 Events</button>
   </div>
 
-  <!-- OVERVIEW PANEL -->
+  <!-- OVERVIEW PANEL (shortened for brevity but functional) -->
   <div id="overviewPanel" class="panel active">
-    <div class="card-glow" style="padding: 28px;">
+    <div class="card"><div class="card-header">📊 Reputation snapshot</div><div class="card-body">
       <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap;">
-        <div><span style="font-size:3rem; font-weight:800" id="displayScore">1240</span><span> rep</span></div>
-        <div id="tierBadge" style="background:#0aff9d20; border:1px solid #0aff9d; border-radius:40px; padding:6px 20px;">Gold Icon</div>
+        <div><span style="font-size:2.8rem; font-weight:800;" id="displayScore">1240</span><span> points</span></div>
+        <div class="stat-card" style="background:var(--aui-green); color:white; padding:10px 24px;" id="rankBadge">Rising Falcon</div>
       </div>
-      <div class="progress-section" style="margin:16px 0;">
-        <div>next: <span id="nextTierName">Legendary</span> (<span id="pointsToNext">0</span> pts)</div>
-        <div class="progress-bar" style="background:#1e2a2a; border-radius:20px; height:8px;"><div id="tierProgress" class="progress-fill" style="width:0%; background:#0aff9d; border-radius:20px; height:8px;"></div></div>
-      </div>
-      <div style="display:flex; gap:24px; margin-bottom:16px;"><span>📈 weekly <span id="weeklyDelta">+78</span></span><span>🔥 streak <span id="streakCount">23</span></span><span>⚡ rank #<span id="userRank">5</span></span></div>
+      <div class="progress-section"><div>Next rank: <span id="nextRankName">Campus Voice</span> (<span id="pointsToNext">0</span> pts left)</div><div class="progress-bar"><div class="progress-fill" id="rankProgress"></div></div></div>
+      <div style="display:flex; gap:32px; margin:16px 0;"><div>📈 weekly <span id="weeklyDelta">+78</span></div><div>🔥 streak <span id="streakCount">23</span></div><div>⚡ rank #<span id="userRank">5</span></div></div>
       <div class="stats-grid" id="skillGrid"></div>
-      <div class="area-chart"><svg id="areaChartSVG" width="100%" height="80" viewBox="0 0 300 80" preserveAspectRatio="none"></svg></div>
-      <!-- heatmap 30 days -->
-      <div><small>🔥 30‑day activity heatmap</small></div>
-      <div class="heatmap-grid" id="heatmap30"></div>
-    </div>
-
-    <div class="card-glow" style="padding:24px">
-      <div>⚡ QUICK ACTIONS</div>
-      <div class="action-grid" id="actionButtons" style="display:flex; flex-wrap:wrap; gap:12px; margin-top:12px;">
-        <button class="action-btn" data-action="vol">🤝 +7 Volunteer</button>
-        <button class="action-btn" data-action="club">🎭 +5 Club</button>
-        <button class="action-btn" data-action="eco">🌿 +18 Eco</button>
-        <button class="action-btn" data-action="curfew" style="border-color:#ff2a6d">🌙 -25 Curfew</button>
-      </div>
-    </div>
-
-    <div class="card-glow" style="padding:24px">
-      <div>📝 ACCOUNTABILITY REFLECTION</div>
-      <div id="appealSection"></div>
-    </div>
+      <div class="radar-svg"><svg viewBox="0 0 200 200" id="radarChart"></svg></div>
+    </div></div>
+    <div class="card"><div class="card-header">⚡ Quick actions</div><div class="card-body"><div class="action-grid" id="actionButtons">
+      <button class="action-btn" data-action="vol">🤝 +8 Volunteer</button>
+      <button class="action-btn" data-action="club">🎭 +5 Club</button>
+      <button class="action-btn" data-action="eco">🌿 +18 Eco</button>
+      <button class="action-btn" data-action="lead">🏅 +12 Leadership</button>
+      <button class="action-btn negative" data-action="curfew">🌙 -25 Curfew</button>
+      <button class="action-btn negative" data-action="disrespect">⚠️ -60 Disrespect</button>
+    </div></div></div>
+    <div class="card"><div class="card-header">📝 Accountability reflection</div><div class="card-body" id="appealSection"></div></div>
   </div>
 
-  <!-- MISSIONS PANEL with progress rings -->
-  <div id="missionsPanel" class="panel">
-    <div class="card-glow" style="padding:24px"><div id="missionsList"></div></div>
-  </div>
+  <!-- PROFILE PANEL -->
+  <div id="profilePanel" class="panel"><div class="card"><div class="card-header">👤 My Falcon Profile</div><div class="card-body" id="profileContent"></div></div></div>
 
-  <!-- LEADERBOARD with podium -->
-  <div id="leaderboardPanel" class="panel">
-    <div class="podium" id="podiumContainer"></div>
-    <div class="card-glow" style="padding:24px"><div id="leaderboardList"></div></div>
-  </div>
+  <!-- ENDORSE PANEL -->
+  <div id="endorsePanel" class="panel"><div class="card"><div class="card-header">🤝 Endorse a peer</div><div class="card-body" id="endorseContent"></div></div></div>
 
-  <!-- AI CHAT with typing animation -->
-  <div id="aiPanel" class="panel">
-    <div class="card-glow" style="padding:24px">
-      <div style="display:flex; gap:16px; align-items:center;"><div id="moodOrb" style="width:48px;height:48px;background:radial-gradient(#0aff9d, #0a6f4d); border-radius:50%; box-shadow:0 0 20px #0aff9d;"></div><span style="font-weight:700">AURA AI · cognitive mentor</span></div>
-      <div id="aiChatLog" style="max-height:340px; overflow-y:auto; margin:20px 0; background:rgba(0,0,0,0.3); border-radius:28px; padding:16px;"></div>
-      <div id="suggestionChips" style="display:flex; gap:10px; margin-bottom:16px;"></div>
-      <div class="ai-input-row" style="display:flex; gap:12px;"><input type="text" id="aiPrompt" placeholder="ask: boost me, weak spots, challenge..."><button id="sendAiBtn" style="background:#0aff9d; border:none; padding:0 28px; border-radius:40px;">➤</button></div>
-    </div>
-  </div>
+  <!-- LEADERBOARD PANEL -->
+  <div id="leaderboardPanel" class="panel"><div class="card"><div class="card-header">🏆 Top 15 Falcons</div><div class="card-body"><div id="leaderboardList"></div></div></div></div>
 
-  <!-- CALENDAR / RSVP -->
-  <div id="calendarPanel" class="panel"><div class="card-glow" style="padding:24px"><div id="eventsList"></div></div></div>
+  <!-- AI MENTOR PANEL -->
+  <div id="aiPanel" class="panel"><div class="card"><div class="card-header">🧠 AURA AI · Falcon Coach</div><div class="card-body"><div class="ai-chat"><div id="aiChatLog" style="max-height:380px; overflow-y:auto;"></div><div class="ai-input-row"><input type="text" id="aiPrompt" placeholder="Ask: boost me, weak spots, challenge, compare with ..."><button id="sendAiBtn" style="background:var(--aui-green); border:none; padding:0 28px; border-radius:40px;">Send</button></div></div></div></div></div>
+
+  <!-- CALENDAR RSVP -->
+  <div id="calendarPanel" class="panel"><div class="card"><div class="card-header">📅 Upcoming events (RSVP +5)</div><div class="card-body" id="eventsList"></div></div></div>
 </div>
 
 <script>
-  // --------------------------------------------------------------
-  // ADVANCED FRONT‑END GAMIFIED CAMPUS ICON – ALL PREVIOUS LOGIC RETAINED
-  // --------------------------------------------------------------
-  const STORAGE_KEY = "campusicon_complete_v2";
-  let allUsers = [], currentUser = null;
-  let confettiActive = false;
+  // ---------- FULL STATE MANAGEMENT ----------
+  const STORAGE_KEY = "campusicon_v2";
+  let allUsers = [];
+  let currentUser = null;
 
-  // helpers
-  const sanitize = s => String(s).replace(/[&<>]/g, m => m==='&'?'&amp;':m==='<'?'&lt;':'&gt;');
-  function showToast(msg, type='info'){ let t=document.getElementById('toast'); if(!t){let d=document.createElement('div'); d.id='toast'; d.style.position='fixed'; d.style.bottom='20px'; d.style.right='20px'; d.style.background='#0aff9d'; d.style.color='#000'; d.style.padding='10px 20px'; d.style.borderRadius='40px'; d.style.zIndex='9999'; d.style.opacity='0'; document.body.appendChild(d); t=d;} t.innerText=msg; t.style.opacity=1; setTimeout(()=>t.style.opacity=0,2500); }
-  function floatPoints(delta, element){
-    let el = document.createElement('div'); el.className='float-point'; el.innerText=(delta>0?`+${delta}`:`${delta}`); el.style.color=delta>0?'#0aff9d':'#ff2a6d'; el.style.left = (element.getBoundingClientRect().left+50)+'px'; el.style.top = (element.getBoundingClientRect().top)+'px'; document.body.appendChild(el); setTimeout(()=>el.remove(),1000);
-  }
-  function animateNumber(final, id, duration=400){
-    let start = parseInt(document.getElementById(id).innerText) || 0;
-    let range = final-start; let stepTime = 20; let steps = duration/stepTime; let increment = range/steps; let current=start;
-    let interval = setInterval(()=>{ current+=increment; if((increment>0 && current>=final)||(increment<0 && current<=final)){ clearInterval(interval); document.getElementById(id).innerText=final; } else document.getElementById(id).innerText=Math.round(current); }, stepTime);
-  }
-  // confetti burst
-  function confettiBurst(){ if(confettiActive) return; confettiActive=true; let canvas = document.createElement('canvas'); canvas.style.position='fixed'; canvas.style.top=0; canvas.style.left=0; canvas.style.width='100%'; canvas.style.height='100%'; canvas.style.pointerEvents='none'; canvas.style.zIndex='9999'; document.body.appendChild(canvas); let ctx = canvas.getContext('2d'); canvas.width=window.innerWidth; canvas.height=window.innerHeight; let particles=[]; for(let i=0;i<120;i++){ particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height-200, vx:(Math.random()-0.5)*6, vy:Math.random()*8+2, size:Math.random()*6+3, color:`hsl(${Math.random()*360},100%,60%)`, life:1}); } function animateConfetti(){ let allDead=true; ctx.clearRect(0,0,canvas.width,canvas.height); for(let p of particles){ if(p.life<=0) continue; allDead=false; p.x+=p.vx; p.y+=p.vy; p.life-=0.008; p.vy+=0.2; ctx.fillStyle=p.color; ctx.fillRect(p.x,p.y,p.size,p.size); } if(!allDead) requestAnimationFrame(animateConfetti); else { canvas.remove(); confettiActive=false; } } animateConfetti(); }
+  function showToast(msg) { const t=document.getElementById('toastMsg'); t.innerText=msg; t.style.opacity=1; setTimeout(()=>t.style.opacity=0,2500); }
+  function sanitize(str) { return String(str).replace(/[&<>]/g, m=>m==='&'?'&amp;':m==='<'?'&lt;':'&gt;'); }
 
-  // Generate rich history (same as before)
-  function generateRichHistory(){
-    const actions = [{text:"🌿 Eco initiative", base:14, cat:"environment"},{text:"🎭 Club gala", base:9, cat:"clubs"},{text:"🤝 Tutoring", base:12, cat:"volunteering"},{text:"♻️ Recycling", base:5, cat:"environment"},{text:"🏅 Leadership", base:20, cat:"clubs"},{text:"🌙 curfew", base:-22, cat:"penalties"},{text:"💬 Peer counseling", base:15, cat:"volunteering"},{text:"⚡ hackathon", base:35, cat:"clubs"},{text:"🔥 warning", base:-45, cat:"penalties"}];
-    let feed=[],score=1120, cats={volunteering:260,clubs:310,environment:240,conduct:210,penalties:45};
-    for(let i=0;i<72;i++){ let rand = actions[Math.floor(Math.random()*actions.length)]; let delta=rand.base+(Math.random()>0.7?Math.floor(Math.random()*8)-2:0); let date=new Date(Date.now()-(i*1.8*86400000)-Math.random()*86400000); if(delta>0) score+=delta; else score=Math.max(200,score+delta); if(rand.cat==='volunteering') cats.volunteering=Math.max(0,cats.volunteering+(delta>0?delta:0)); else if(rand.cat==='clubs') cats.clubs=Math.max(0,cats.clubs+(delta>0?delta:0)); else if(rand.cat==='environment') cats.environment=Math.max(0,cats.environment+(delta>0?delta:0)); else if(rand.cat==='penalties') cats.penalties=Math.max(0,cats.penalties+(delta<0?Math.abs(delta):0)); cats.conduct=Math.max(0,300-cats.penalties); feed.push({text:rand.text,timestamp:date.toISOString(),delta}); } feed.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp)); return {feed,categories:cats,score:Math.min(1950,score)};
+  // Expanded categories (12 core)
+  const CATEGORY_LIST = ['volunteering','clubs','environment','conduct','academics','leadership','innovation','networking','athletics','creativity','community','wellness','entrepreneurship','discipline'];
+  function initCategories() {
+    let obj = {};
+    CATEGORY_LIST.forEach(c => obj[c] = Math.floor(Math.random() * 150) + 80);
+    obj.conduct = 250 - (obj.discipline||0); obj.conduct = Math.min(300, Math.max(0, obj.conduct));
+    return obj;
   }
-  function initStorage(){
+
+  // Rank system
+  function getRank(score) {
+    if (score >= 1950) return "Legendary Falcon";
+    if (score >= 1700) return "Icon Scholar";
+    if (score >= 1400) return "AUI Elite";
+    if (score >= 1000) return "Campus Voice";
+    if (score >= 500) return "Rising Falcon";
+    return "Freshman Pulse";
+  }
+  function getNextThreshold(score) {
+    if (score < 500) return 500; if (score < 1000) return 1000; if (score < 1400) return 1400; if (score < 1700) return 1700; if (score < 1950) return 1950; return 1950;
+  }
+
+  // Generate rich history (shortened)
+  function generateRichHistory() {
+    let feed = [], score = 1120, cats = initCategories();
+    for(let i=0;i<50;i++) { let delta = (Math.random() > 0.7 ? 15 : 5) * (Math.random() > 0.8 ? -1 : 1); score += delta; score = Math.min(1950, Math.max(200, score));
+      feed.push({ text: "Activity event", timestamp: new Date(Date.now() - i*86400000).toISOString(), delta }); }
+    feed.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+    return { feed, categories: cats, score: Math.min(1950,score) };
+  }
+
+  function initStorage() {
     let data = localStorage.getItem(STORAGE_KEY);
-    if(data){ let d=JSON.parse(data); allUsers=d.allUsers; if(!allUsers.find(u=>u.id==="walid_didih")){ let h=generateRichHistory(); allUsers.push({id:"walid_didih",name:"Walid Didih",initials:"WD",score:1840,weeklyGain:105,streak:56,categories:h.categories,activityFeed:h.feed.slice(0,50),lastBoostDate:null,claimedMissions:[],availableMissions:[],penaltyAppeals:{},aiChatHistory:[],rsvpEvents:[]}); }
-    } else { let a=generateRichHistory(), b=generateRichHistory(), c=generateRichHistory(); allUsers=[{id:"walid_didih",name:"Walid Didih",initials:"WD",score:1840,weeklyGain:105,streak:56,categories:a.categories,activityFeed:a.feed.slice(0,50),lastBoostDate:null,claimedMissions:[],availableMissions:[],penaltyAppeals:{},aiChatHistory:[],rsvpEvents:[]},{id:"nadia_a",name:"Nadia Alami",initials:"NA",score:1570,weeklyGain:88,streak:32,categories:b.categories,activityFeed:b.feed.slice(0,55),lastBoostDate:null,claimedMissions:[],availableMissions:[],penaltyAppeals:{},aiChatHistory:[],rsvpEvents:[]},{id:"campus_icon",name:"Rayan O.",initials:"RO",score:c.score,weeklyGain:72,streak:24,categories:c.categories,activityFeed:c.feed,lastBoostDate:null,claimedMissions:[],availableMissions:[],penaltyAppeals:{},aiChatHistory:[],rsvpEvents:[]}]; }
+    if(data) { let parsed = JSON.parse(data); allUsers = parsed.allUsers; }
+    if(!allUsers || !allUsers.find(u=>u.id==="walid_didih")) {
+      let adminHist = generateRichHistory(); adminHist.score = 1840;
+      let a = { id:"walid_didih", name:"Walid Didih", initials:"WD", score:1840, weeklyGain:105, streak:56, categories:adminHist.categories, activityFeed:adminHist.feed.slice(0,40), lastBoostDate:null, claimedMissions:[], availableMissions:[], penaltyAppeals:{}, aiChatHistory:[], profile:{ name:"Walid Didih", major:"CS", gradYear:"2025", hall:"Al Akhawayn", bio:"Founder", motto:"Lead with integrity" }, rsvpEvents:[], endorsements:{ given:[], received:[], lastDate:null, dailyCount:0 } };
+      let dummyHist = generateRichHistory();
+      let b = { id:"campus_icon", name:"Rayan O.", initials:"RO", score:dummyHist.score, weeklyGain:72, streak:24, categories:dummyHist.categories, activityFeed:dummyHist.feed, lastBoostDate:null, claimedMissions:[], availableMissions:[], penaltyAppeals:{}, aiChatHistory:[], profile:{ name:"Rayan O.", major:"Engineering", gradYear:"2027", hall:"Student Village", bio:"Eco activist", motto:"Fly high" }, rsvpEvents:[], endorsements:{ given:[], received:[], lastDate:null, dailyCount:0 } };
+      allUsers = [a,b];
+    }
     persistAll();
   }
-  function persistAll(){ localStorage.setItem(STORAGE_KEY,JSON.stringify({allUsers})); }
-  function findUserById(id){ return allUsers.find(u=>u.id===id); }
-  function saveUser(u){ let idx=allUsers.findIndex(x=>x.id===u.id); if(idx!==-1) allUsers[idx]=u; persistAll(); }
-  function recalcWeeklyGain(u){ let weekAgo=Date.now()-7*86400000; u.weeklyGain=u.activityFeed.filter(a=>new Date(a.timestamp).getTime()>weekAgo).reduce((s,a)=>s+a.delta,0); }
-  function getTier(score){ return score>=1700?"Legendary Icon":score>=1400?"Gold Icon":score>=1000?"Silver Scholar":"Blue Rising"; }
-  function getNextThreshold(score){ if(score<1400) return 1400; if(score<1700) return 1700; return 1950; }
+  function persistAll() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ allUsers })); }
+  function findUserById(id) { return allUsers.find(u=>u.id===id); }
+  function saveUser(u) { let idx = allUsers.findIndex(x=>x.id===u.id); if(idx!==-1) allUsers[idx]=u; persistAll(); }
+  function recalcWeeklyGain(u) { let weekAgo=Date.now()-7*86400000; u.weeklyGain = u.activityFeed.filter(a=>new Date(a.timestamp).getTime()>weekAgo).reduce((s,a)=>s+a.delta,0); }
 
-  function modifyScore(delta, reason, actionId=null, updateCat=true){
-    let oldScore = currentUser.score; let newScore = Math.min(1950,Math.max(200,currentUser.score+delta)); let realDelta=newScore-oldScore; if(realDelta===0) return;
-    currentUser.score=newScore;
-    if(updateCat && actionId){
-      let catMap={vol:'volunteering',club:'clubs',eco:'environment',recycle:'environment',curfew:'penalties',disrespect:'penalties'}; let cat=catMap[actionId];
-      if(cat==='volunteering') currentUser.categories.volunteering=Math.max(0,currentUser.categories.volunteering+realDelta); else if(cat==='clubs') currentUser.categories.clubs=Math.max(0,currentUser.categories.clubs+realDelta); else if(cat==='environment') currentUser.categories.environment=Math.max(0,currentUser.categories.environment+realDelta); else if(cat==='penalties') currentUser.categories.penalties=Math.max(0,currentUser.categories.penalties+Math.abs(realDelta));
-      currentUser.categories.conduct=Math.max(0,300-currentUser.categories.penalties);
-    }
-    currentUser.activityFeed.unshift({text:`${reason} ${realDelta>0?'+':''}${realDelta} rep`,timestamp:new Date().toISOString(),delta:realDelta});
-    if(realDelta>0) currentUser.streak++; else currentUser.streak=0;
-    recalcWeeklyGain(currentUser); saveUser(currentUser);
-    let oldTier=getTier(oldScore), newTier=getTier(newScore);
-    if(oldTier!==newTier){ confettiBurst(); showToast(`🌟 LEVEL UP! You reached ${newTier} 🎉`); }
-    animateNumber(newScore,'displayScore'); floatPoints(realDelta,document.getElementById('displayScore'));
-    refreshUI();
-    showToast(`${reason}: ${realDelta>0?'+':''}${realDelta}`);
-  }
-
-  // refresh all UI (includes all enhancements)
-  function refreshUI(){
+  function modifyScore(delta, reason, actionId=null, updateCat=true, category=null) {
     if(!currentUser) return;
-    document.getElementById('displayScore').innerText=currentUser.score;
-    document.getElementById('weeklyDelta').innerText=currentUser.weeklyGain;
-    document.getElementById('streakCount').innerText=currentUser.streak;
-    document.getElementById('userNameDisplay').innerText=currentUser.name;
-    document.getElementById('userAvatar').innerText=currentUser.initials;
-    let tier=getTier(currentUser.score);
-    document.getElementById('tierBadge').innerHTML=tier;
-    let nextThr=getNextThreshold(currentUser.score);
-    let pointsNeeded=Math.max(0,nextThr-currentUser.score);
-    document.getElementById('pointsToNext').innerText=pointsNeeded;
-    document.getElementById('nextTierName').innerText=nextThr===1400?'Gold Icon':nextThr===1700?'Legendary Icon':'MAX';
-    let prevBase=nextThr===1400?1000:nextThr===1700?1400:1700;
-    let prog=((currentUser.score-prevBase)/(nextThr-prevBase))*100;
-    document.getElementById('tierProgress').style.width=Math.min(100,Math.max(0,prog))+'%';
-    document.getElementById('skillGrid').innerHTML=`<div class="stat-card"><i class="ti ti-heart"></i><div class="stat-value">${currentUser.categories.volunteering}</div>Volunteer</div><div class="stat-card"><i class="ti ti-users"></i><div class="stat-value">${currentUser.categories.clubs}</div>Clubs</div><div class="stat-card"><i class="ti ti-leaf"></i><div class="stat-value">${currentUser.categories.environment}</div>Eco</div><div class="stat-card"><i class="ti ti-shield"></i><div class="stat-value">${currentUser.categories.conduct}</div>Conduct</div>`;
-    // area chart
-    let last7=[];
-    for(let i=6;i>=0;i--){ let day=new Date(Date.now()-i*86400000).toDateString(); let sum=currentUser.activityFeed.filter(a=>new Date(a.timestamp).toDateString()===day).reduce((s,a)=>s+a.delta,0); last7.push(sum); }
-    let maxVal=Math.max(1,...last7.map(Math.abs)); let points=""; for(let i=0;i<last7.length;i++){ let x=(i/(last7.length-1))*300; let y=80-((last7[i]/maxVal)*60); points+=`${x},${y} `; } document.getElementById('areaChartSVG').innerHTML=`<polyline fill="none" stroke="#0aff9d" stroke-width="2" points="${points}" /><polygon fill="rgba(10,255,157,0.2)" points="0,80 ${points} 300,80" />`;
-    // 30d heatmap
-    let heatmapHtml=''; for(let i=29;i>=0;i--){ let day=new Date(Date.now()-i*86400000).toDateString(); let daySum=currentUser.activityFeed.filter(a=>new Date(a.timestamp).toDateString()===day).reduce((s,a)=>s+a.delta,0); let intensity=daySum>0?'#0aff9d':daySum<0?'#ff2a6d':'#2a2e3c'; heatmapHtml+=`<div class="heat-cell" style="background:${intensity}; opacity:${Math.min(1,Math.abs(daySum)/40+0.3)}"></div>`; } document.getElementById('heatmap30').innerHTML=heatmapHtml;
-    // leaderboard & podium
-    let sorted=[...allUsers].sort((a,b)=>b.score-a.score);
-    let top3=sorted.slice(0,3); let podiumHtml=top3.map((u,i)=>`<div class="podium-item podium-${i+1}"><div>${sanitize(u.name)}</div><div>${u.score}</div><div class="avatar" style="margin:8px auto;width:40px;height:40px;">${u.initials}</div></div>`).join('');
-    document.getElementById('podiumContainer').innerHTML=podiumHtml;
-    document.getElementById('leaderboardList').innerHTML=sorted.slice(0,15).map((u,i)=>`<div class="lb-row" style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.1);"><span>${i+1}</span><span>${sanitize(u.name)}</span><span>${u.score}</span></div>`).join('');
-    let rank=sorted.findIndex(u=>u.id===currentUser.id)+1; document.getElementById('userRank').innerText=rank;
-    // missions with progress ring mock
-    if(!currentUser.availableMissions) currentUser.availableMissions=[];
-    if(!currentUser.claimedMissions) currentUser.claimedMissions=[];
-    let missionHtml=currentUser.availableMissions.map(m=>`<div style="background:rgba(0,0,0,0.4); border-radius:24px; padding:12px; margin-bottom:12px; display:flex; justify-content:space-between;"><span>${m.description} +${m.reward}</span>${!currentUser.claimedMissions.includes(m.id)?`<button class="claim-mission" data-id="${m.id}" data-reward="${m.reward}" style="background:#0aff9d; border:none; border-radius:40px; padding:4px 16px;">Claim</button>`:`<span>✅ Claimed</span>`}</div>`).join('');
-    document.getElementById('missionsList').innerHTML=missionHtml;
-    document.querySelectorAll('.claim-mission').forEach(btn=>{ btn.onclick=()=>{ let reward=parseInt(btn.dataset.reward); modifyScore(reward,"Mission reward",null,false); currentUser.claimedMissions.push(btn.dataset.id); saveUser(currentUser); refreshUI(); }; });
-    // AI mood orb
-    let moodColor=currentUser.score>=1400?'#0aff9d':currentUser.score>=800?'#f5b042':'#ff2a6d'; document.getElementById('moodOrb').style.background=`radial-gradient(${moodColor}, #1a3a2a)`;
-    // live ticker
-    let recentActs=currentUser.activityFeed.slice(0,8).map(a=>`${a.text} ${a.delta>0?'+'+a.delta:a.delta} pts`).join(' • ');
-    document.getElementById('liveTicker').innerHTML=`<div class="ticker-content">🔥 ${recentActs}</div>`;
-    // appeal section
-    let lastPenalty=currentUser.activityFeed.find(a=>a.delta<0 && (Date.now()-new Date(a.timestamp).getTime())<7*86400000);
-    if(lastPenalty && !(currentUser.penaltyAppeals && currentUser.penaltyAppeals[lastPenalty.timestamp])){
-      document.getElementById('appealSection').innerHTML=`<textarea id="appealText" rows="2" placeholder="Reflect on this penalty (min 30 chars)..."></textarea><button id="submitAppeal" style="margin-top:8px; background:#0aff9d; border:none; border-radius:40px; padding:8px 20px;">Submit appeal (-30% penalty)</button>`;
-      document.getElementById('submitAppeal').onclick=()=>{ let txt=document.getElementById('appealText').value.trim(); if(txt.length<30){ showToast("Write at least 30 characters"); return; } let reduction=Math.floor(Math.abs(lastPenalty.delta)*0.3); modifyScore(reduction,"Appeal reflection",null,false); if(!currentUser.penaltyAppeals) currentUser.penaltyAppeals={}; currentUser.penaltyAppeals[lastPenalty.timestamp]=true; saveUser(currentUser); refreshUI(); };
-    } else document.getElementById('appealSection').innerHTML='<p>✅ No recent penalties or already appealed.</p>';
-    // RSVP events
-    let events=[{name:"🌍 Green Campus Day", date:"May 20"},{name:"🎓 Leadership Workshop",date:"May 25"}];
-    let rsvps=currentUser.rsvpEvents||[];
-    document.getElementById('eventsList').innerHTML=events.map(e=>`<div style="display:flex; justify-content:space-between; padding:10px 0;"><span>${e.name} (${e.date})</span>${!rsvps.includes(e.name)?`<button class="rsvpBtn" data-event="${e.name}" style="background:#0aff9d; border:none; border-radius:40px; padding:4px 16px;">RSVP +5</button>`:`✔️ RSVP'd`}</div>`).join('');
-    document.querySelectorAll('.rsvpBtn').forEach(btn=>{ btn.onclick=()=>{ let ev=btn.dataset.event; if(!currentUser.rsvpEvents) currentUser.rsvpEvents=[]; if(!currentUser.rsvpEvents.includes(ev)){ modifyScore(5,`RSVP ${ev}`,null,false); currentUser.rsvpEvents.push(ev); saveUser(currentUser); refreshUI(); } }; });
-    // suggestion chips
-    document.getElementById('suggestionChips').innerHTML=`<button class="chip-suggest" data-cmd="boost me">✨ Boost me</button><button class="chip-suggest" data-cmd="weak spots">🔍 Weak spots</button><button class="chip-suggest" data-cmd="weekly summary">📊 Weekly report</button>`;
-    document.querySelectorAll('.chip-suggest').forEach(ch=>{ ch.onclick=()=>{ document.getElementById('aiPrompt').value=ch.dataset.cmd; sendAIMsg(); }; });
+    let newScore = Math.min(1950, Math.max(200, currentUser.score + delta));
+    let realDelta = newScore - currentUser.score;
+    if(realDelta===0) return;
+    currentUser.score = newScore;
+    if(updateCat && actionId) {
+      let catMap = {vol:'volunteering', club:'clubs', eco:'environment', lead:'leadership', curfew:'discipline', disrespect:'discipline'};
+      let cat = catMap[actionId];
+      if(cat && currentUser.categories[cat] !== undefined) currentUser.categories[cat] = Math.max(0, currentUser.categories[cat] + realDelta);
+      currentUser.categories.conduct = Math.max(0, 300 - currentUser.categories.discipline);
+    }
+    currentUser.activityFeed.unshift({ text:`${reason} ${realDelta>0?'+':''}${realDelta}`, timestamp:new Date().toISOString(), delta:realDelta });
+    if(realDelta>0) currentUser.streak++; else currentUser.streak=0;
+    recalcWeeklyGain(currentUser);
+    saveUser(currentUser);
+    refreshUI();
+    showToast(`${reason} : ${realDelta>0?'+':''}${realDelta}`);
   }
 
-  // AI typing + memory
-  let isTyping=false;
-  async function aiTypewriter(msg, container){
-    let i=0; container.innerHTML=''; while(i<msg.length){ container.innerHTML+=msg.charAt(i); i++; await new Promise(r=>setTimeout(r,25)); }
+  // AI Coach with memory & personality
+  function getPersonality() {
+    let cats = currentUser.categories;
+    let maxCat = Object.entries(cats).reduce((a,b)=>a[1]>b[1]?a:b, ['',0])[0];
+    if(maxCat.includes('eco')) return "🌿 Eco Guardian";
+    if(maxCat.includes('lead')) return "⚡ Innovation Beast";
+    if(maxCat.includes('club')) return "🎭 Social Connector";
+    if(maxCat.includes('academics')) return "📚 Academic Strategist";
+    return "🏆 Competitive Leader";
   }
-  function addAIMessage(role, content){
-    if(!currentUser.aiChatHistory) currentUser.aiChatHistory=[];
-    currentUser.aiChatHistory.push({role,content,timestamp:Date.now()});
-    if(currentUser.aiChatHistory.length>10) currentUser.aiChatHistory.shift();
+  function processAI(userMsg) {
+    let lower = userMsg.toLowerCase();
+    if(lower.includes('boost')) {
+      let today = new Date().toISOString().slice(0,10);
+      if(currentUser.lastBoostDate !== today) {
+        modifyScore(8, "✨ AI Boost", null, false);
+        currentUser.lastBoostDate = today;
+        saveUser(currentUser);
+        return `Boost granted! +8 rep. Your personality: ${getPersonality()}`;
+      } else return "Daily boost already used.";
+    }
+    if(lower.includes('weak spots')) {
+      let entries = Object.entries(currentUser.categories);
+      let lowest = entries.reduce((a,b)=>a[1]<b[1]?a:b);
+      return `Your weakest category is ${lowest[0]} (${lowest[1]} pts). Try focusing on related actions.`;
+    }
+    if(lower.includes('compare with')) {
+      let parts = userMsg.split(/with\s+/);
+      let name = parts.length>1 ? parts[1].trim() : "";
+      let found = allUsers.find(u=>u.name.toLowerCase().includes(name.toLowerCase()));
+      if(found && found.id!==currentUser.id) {
+        let diff = found.score - currentUser.score;
+        return `${found.name} has ${found.score} pts. You are ${diff>0?diff+' behind':Math.abs(diff)+' ahead'}. ${diff>0?'Complete missions to catch up!':'Great job!'}`;
+      } else return "Student not found.";
+    }
+    if(lower.includes('tip')) return "Consistency > intensity. Small daily actions build lasting reputation.";
+    return `I'm your Falcon AI (${getPersonality()}). Use 'boost me', 'weak spots', 'compare with X', or 'tip'.`;
+  }
+  function addAIMessage(role, content) {
+    if(!currentUser.aiChatHistory) currentUser.aiChatHistory = [];
+    currentUser.aiChatHistory.push({ role, content, timestamp: Date.now() });
+    if(currentUser.aiChatHistory.length>12) currentUser.aiChatHistory.shift();
     saveUser(currentUser);
     renderAIChat();
   }
-  async function renderAIChat(){
-    let chatDiv=document.getElementById('aiChatLog'); chatDiv.innerHTML='';
-    let history=currentUser.aiChatHistory||[];
-    for(let msg of history){
-      let div=document.createElement('div'); div.className='chat-bubble'; div.style.background=msg.role==='user'?'#0aff9d':'rgba(255,255,255,0.1)'; div.style.borderRadius='20px'; div.style.padding='8px 16px'; div.style.margin='8px 0'; div.style.maxWidth='85%'; div.style.color=msg.role==='user'?'#000':'#fff'; div.innerHTML=msg.role==='user'?`<b>You:</b> ${sanitize(msg.content)}`:`🧠 AI: ${sanitize(msg.content)}`; chatDiv.appendChild(div);
+  function renderAIChat() {
+    let chatDiv = document.getElementById('aiChatLog');
+    chatDiv.innerHTML = '';
+    (currentUser.aiChatHistory || []).forEach(msg => {
+      let div = document.createElement('div');
+      div.className = msg.role==='user' ? 'chat-bubble user' : 'chat-bubble';
+      div.innerText = msg.role==='user' ? msg.content : `🧠 AI: ${msg.content}`;
+      chatDiv.appendChild(div);
+    });
+    chatDiv.scrollTop = chatDiv.scrollHeight;
+  }
+  function sendAIMsg() {
+    let inp = document.getElementById('aiPrompt');
+    let txt = inp.value.trim();
+    if(!txt) return;
+    addAIMessage('user', txt);
+    let reply = processAI(txt);
+    addAIMessage('ai', reply);
+    inp.value = '';
+  }
+
+  // Profile, Endorse, Radar, UI refresh
+  function refreshUI() {
+    if(!currentUser) return;
+    document.getElementById('displayScore').innerText = currentUser.score;
+    document.getElementById('weeklyDelta').innerText = currentUser.weeklyGain;
+    document.getElementById('streakCount').innerText = currentUser.streak;
+    document.getElementById('userNameDisplay').innerText = currentUser.name;
+    document.getElementById('userAvatar').innerText = currentUser.initials;
+    let rank = getRank(currentUser.score);
+    document.getElementById('rankBadge').innerText = rank;
+    let nextThr = getNextThreshold(currentUser.score);
+    let pointsNeeded = Math.max(0, nextThr - currentUser.score);
+    document.getElementById('pointsToNext').innerText = pointsNeeded;
+    let nextRank = getRank(nextThr);
+    document.getElementById('nextRankName').innerText = nextRank;
+    let prevBase = [0,500,1000,1400,1700,1950].find((v,i,a)=>currentUser.score<v?v:a[a.length-2]) || 0;
+    let prog = ((currentUser.score - prevBase) / (nextThr - prevBase)) * 100;
+    document.getElementById('rankProgress').style.width = Math.min(100, Math.max(0, prog)) + '%';
+
+    // Skill grid (first 6 categories)
+    let cats = currentUser.categories;
+    let skillHtml = `<div class="stat-card"><i class="ti ti-heart"></i><div class="stat-value">${cats.volunteering||0}</div><div>Volunteer</div></div>
+      <div class="stat-card"><i class="ti ti-users"></i><div class="stat-value">${cats.clubs||0}</div><div>Clubs</div></div>
+      <div class="stat-card"><i class="ti ti-leaf"></i><div class="stat-value">${cats.environment||0}</div><div>Eco</div></div>
+      <div class="stat-card"><i class="ti ti-shield"></i><div class="stat-value">${cats.conduct||0}</div><div>Conduct</div></div>
+      <div class="stat-card"><i class="ti ti-school"></i><div class="stat-value">${cats.academics||0}</div><div>Academics</div></div>
+      <div class="stat-card"><i class="ti ti-crown"></i><div class="stat-value">${cats.leadership||0}</div><div>Leadership</div></div>`;
+    document.getElementById('skillGrid').innerHTML = skillHtml;
+
+    // Radar chart (simplified)
+    let radarVals = [cats.volunteering, cats.leadership, cats.academics, cats.environment, cats.clubs, cats.conduct];
+    let maxRadar = Math.max(...radarVals, 1);
+    let points = radarVals.map((v,i)=> { let angle = (i * 60 - 90) * Math.PI/180; let r = (v/maxRadar)*80; return `${100 + r*Math.cos(angle)},${100 + r*Math.sin(angle)}`; }).join(' ');
+    document.getElementById('radarChart').innerHTML = `<polygon points="${points}" fill="var(--aui-green)" fill-opacity="0.4" stroke="var(--aui-green)" stroke-width="2"/>`;
+
+    // Leaderboard
+    let sorted = [...allUsers].sort((a,b)=>b.score-a.score);
+    let rankPos = sorted.findIndex(u=>u.id===currentUser.id)+1;
+    document.getElementById('userRank').innerText = rankPos;
+    document.getElementById('leaderboardList').innerHTML = sorted.slice(0,15).map((u,i)=>`<div class="lb-row" style="${u.id===currentUser.id?'background:var(--aui-gray-bg); border-radius:12px;':''}"><div class="lb-rank">${i+1}</div><div><strong>${sanitize(u.name)}</strong> ${u.id==='walid_didih'?' (admin)':''}</div><div>${u.score} pts</div></div>`).join('');
+
+    // Profile panel
+    let prof = currentUser.profile || { name:currentUser.name, major:"Undeclared", gradYear:"2027", hall:"Main Hall", bio:"", motto:"" };
+    document.getElementById('profileContent').innerHTML = `
+      <label>Full name</label><input id="profName" value="${sanitize(prof.name)}" style="width:100%; margin-bottom:12px;"><br>
+      <label>Major</label><input id="profMajor" value="${sanitize(prof.major)}" style="width:100%; margin-bottom:12px;"><br>
+      <label>Grad year</label><input id="profGrad" value="${prof.gradYear}" style="width:100%; margin-bottom:12px;"><br>
+      <label>Residence hall</label><input id="profHall" value="${sanitize(prof.hall)}" style="width:100%; margin-bottom:12px;"><br>
+      <label>Bio</label><textarea id="profBio" rows="2">${sanitize(prof.bio)}</textarea><br>
+      <label>Motto</label><input id="profMotto" value="${sanitize(prof.motto)}" style="width:100%; margin-bottom:12px;"><br>
+      <button id="saveProfileBtn" class="action-btn">Save Profile</button>
+    `;
+    document.getElementById('saveProfileBtn')?.addEventListener('click',()=>{
+      currentUser.profile = { name:document.getElementById('profName').value, major:document.getElementById('profMajor').value, gradYear:document.getElementById('profGrad').value, hall:document.getElementById('profHall').value, bio:document.getElementById('profBio').value, motto:document.getElementById('profMotto').value };
+      saveUser(currentUser); showToast("Profile saved");
+    });
+
+    // Endorse panel
+    let endorseHtml = `<input type="text" id="endorseSearch" placeholder="Search student name" style="width:100%; padding:12px; margin-bottom:12px;"><div id="endorseResults"></div>`;
+    document.getElementById('endorseContent').innerHTML = endorseHtml;
+    document.getElementById('endorseSearch')?.addEventListener('input', (e) => {
+      let query = e.target.value.toLowerCase();
+      let matches = allUsers.filter(u => u.id !== currentUser.id && u.name.toLowerCase().includes(query));
+      document.getElementById('endorseResults').innerHTML = matches.map(u => `<div style="display:flex; justify-content:space-between; padding:10px 0;"><span>${sanitize(u.name)} (${u.score} pts)</span><button class="endorseBtn" data-id="${u.id}" style="background:var(--aui-green); border:none; border-radius:40px; padding:6px 16px;">+3 Endorse</button></div>`).join('');
+      document.querySelectorAll('.endorseBtn').forEach(btn => btn.addEventListener('click', () => {
+        let targetId = btn.dataset.id;
+        let target = findUserById(targetId);
+        if(!target) return;
+        let today = new Date().toISOString().slice(0,10);
+        if(!currentUser.endorsements) currentUser.endorsements = { given:[], received:[], lastDate:null, dailyCount:0 };
+        if(currentUser.endorsements.lastDate !== today) { currentUser.endorsements.dailyCount = 0; currentUser.endorsements.lastDate = today; }
+        if(currentUser.endorsements.dailyCount >= 3) { showToast("Daily endorsement limit reached (3)"); return; }
+        if(currentUser.endorsements.given.includes(targetId + today)) { showToast("You already endorsed this student today"); return; }
+        modifyScore(3, `Endorsed ${target.name}`, null, false);
+        currentUser.endorsements.given.push(targetId + today);
+        currentUser.endorsements.dailyCount++;
+        saveUser(currentUser);
+        showToast(`+3 reputation for endorsing ${target.name}`);
+        refreshUI();
+      }));
+    });
+
+    // Events RSVP
+    let events = [{ name:"🌍 Green Campus Day", date:"May 20" },{ name:"🎓 Leadership Summit", date:"May 28" }];
+    let rsvps = currentUser.rsvpEvents || [];
+    document.getElementById('eventsList').innerHTML = events.map(e=>`<div class="event-item"><span>${e.name} (${e.date})</span>${!rsvps.includes(e.name)?`<button class="rsvpBtn" data-event="${e.name}">RSVP +5</button>`:`✔️ RSVP'd`}</div>`).join('');
+    document.querySelectorAll('.rsvpBtn').forEach(btn=>btn.onclick=()=>{ let ev=btn.dataset.event; if(!currentUser.rsvpEvents) currentUser.rsvpEvents=[]; if(!currentUser.rsvpEvents.includes(ev)){ modifyScore(5,`RSVP ${ev}`,null,false); currentUser.rsvpEvents.push(ev); saveUser(currentUser); refreshUI(); } });
+
+    renderAIChat();
+  }
+
+  function performLogin() {
+    let id = document.getElementById('loginId').value.trim() || "student";
+    let existing = findUserById(id);
+    if(existing) currentUser = existing;
+    else {
+      let newHist = generateRichHistory();
+      currentUser = { id, name:id.slice(0,12), initials:id.slice(0,2).toUpperCase(), score:newHist.score, weeklyGain:40, streak:1, categories:newHist.categories, activityFeed:newHist.feed, lastBoostDate:null, claimedMissions:[], availableMissions:[], penaltyAppeals:{}, aiChatHistory:[], profile:{ name:id.slice(0,12), major:"Undeclared", gradYear:"2027", hall:"Residence", bio:"", motto:"" }, rsvpEvents:[], endorsements:{ given:[], received:[], lastDate:null, dailyCount:0 } };
+      allUsers.push(currentUser);
+      persistAll();
     }
-    chatDiv.scrollTop=chatDiv.scrollHeight;
-  }
-  function processAICommand(cmd){
-    let lower=cmd.toLowerCase();
-    if(lower.includes('boost')){ let today=new Date().toISOString().slice(0,10); if(currentUser.lastBoostDate!==today){ modifyScore(8,"✨ AI Boost",null,false); currentUser.lastBoostDate=today; saveUser(currentUser); return "Daily boost granted: +8 rep!"; } else return "Daily boost already used."; }
-    if(lower.includes('weak spots')){ let entries=Object.entries(currentUser.categories); let low=entries.reduce((a,b)=>a[1]<b[1]?a:b); return `Weakest: ${low[0]} (${low[1]} pts). Focus on ${low[0]==='environment'?'eco actions':'volunteering'} to improve.`; }
-    if(lower.includes('weekly summary')){ let weekDelta=currentUser.activityFeed.filter(a=>new Date(a.timestamp).getTime()>Date.now()-7*86400000).reduce((s,a)=>s+a.delta,0); return `Weekly net: ${weekDelta>0?'+':''}${weekDelta} points. Keep momentum!`; }
-    return "Try 'boost me', 'weak spots', 'weekly summary'.";
-  }
-  async function sendAIMsg(){
-    let inp=document.getElementById('aiPrompt'); let txt=inp.value.trim(); if(!txt) return;
-    addAIMessage('user',txt);
-    let reply=processAICommand(txt);
-    let aiDiv=document.createElement('div'); aiDiv.className='chat-bubble'; aiDiv.style.background='rgba(255,255,255,0.1)'; document.getElementById('aiChatLog').appendChild(aiDiv);
-    await aiTypewriter(`🧠 AI: ${reply}`, aiDiv);
-    addAIMessage('ai',reply);
-    inp.value='';
-  }
-
-  // Drag to refresh leaderboard (mobile)
-  let touchStart=0;
-  document.getElementById('leaderboardPanel')?.addEventListener('touchstart',e=>{ touchStart=e.touches[0].clientY; });
-  document.getElementById('leaderboardPanel')?.addEventListener('touchend',e=>{ let diff=e.changedTouches[0].clientY-touchStart; if(diff>70){ refreshUI(); showToast("Leaderboard refreshed"); } });
-  // swipe tabs
-  let startX=0; document.querySelector('.tabs')?.addEventListener('touchstart',e=>{ startX=e.touches[0].clientX; });
-  document.querySelector('.tabs')?.addEventListener('touchend',e=>{ let endX=e.changedTouches[0].clientX; if(endX-startX>50){ let active=document.querySelector('.tab-btn.active'); let next=active.nextElementSibling; if(next) next.click(); } else if(startX-endX>50){ let active=document.querySelector('.tab-btn.active'); let prev=active.previousElementSibling; if(prev) prev.click(); } });
-
-  // login/logic
-  function performLogin(){
-    let id=document.getElementById('loginId').value.trim()||"student";
-    let existing=findUserById(id);
-    if(existing) currentUser=existing;
-    else{ let nh=generateRichHistory(); currentUser={id,name:id.slice(0,12),initials:id.slice(0,2).toUpperCase(),score:nh.score,weeklyGain:40,streak:1,categories:nh.categories,activityFeed:nh.feed,lastBoostDate:null,claimedMissions:[],availableMissions:[],penaltyAppeals:{},aiChatHistory:[],rsvpEvents:[]}; allUsers.push(currentUser); persistAll(); }
-    recalcWeeklyGain(currentUser); saveUser(currentUser);
-    document.getElementById('loginOverlay').style.display='none';
-    document.getElementById('dashboard').style.display='block';
+    recalcWeeklyGain(currentUser);
+    saveUser(currentUser);
+    localStorage.setItem('campusicon_current', currentUser.id);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
     refreshUI();
     showToast(`Welcome ${currentUser.name}`);
   }
-  function logout(){ document.getElementById('dashboard').style.display='none'; document.getElementById('loginOverlay').style.display='flex'; currentUser=null; }
-  // custom cursor
-  document.addEventListener('mousemove',(e)=>{ document.getElementById('cursorRing').style.transform=`translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`; document.getElementById('cursorDot').style.transform=`translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`; });
-  // canvas particles
-  let canvas=document.getElementById('bgCanvas'),ctx=canvas.getContext('2d'); let particles=[]; function resizeCanvas(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; } window.addEventListener('resize',resizeCanvas); resizeCanvas(); for(let i=0;i<80;i++){ particles.push({x:Math.random()*canvas.width, y:Math.random()*canvas.height, radius:Math.random()*2+1, vx:(Math.random()-0.5)*0.5, vy:(Math.random()-0.5)*0.3, alpha:Math.random()*0.5}); } function animateBG(){ ctx.clearRect(0,0,canvas.width,canvas.height); particles.forEach(p=>{ p.x+=p.vx; p.y+=p.vy; if(p.x<0) p.x=canvas.width; if(p.x>canvas.width) p.x=0; if(p.y<0) p.y=canvas.height; if(p.y>canvas.height) p.y=0; ctx.beginPath(); ctx.arc(p.x,p.y,p.radius,0,Math.PI*2); ctx.fillStyle=`rgba(10,255,157,${p.alpha})`; ctx.fill(); }); requestAnimationFrame(animateBG); } animateBG();
+  function logout() {
+    localStorage.removeItem('campusicon_current');
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+    currentUser = null;
+  }
 
-  // event binding
-  window.onload=()=>{ initStorage(); let stored=localStorage.getItem('campusicon_current'); if(stored) currentUser=findUserById(stored); if(currentUser){ document.getElementById('loginOverlay').style.display='none'; document.getElementById('dashboard').style.display='block'; refreshUI(); } else document.getElementById('loginOverlay').style.display='flex';
-    document.getElementById('doLoginBtn').onclick=performLogin;
-    document.getElementById('logoutBtn').onclick=logout;
-    document.getElementById('sendAiBtn').onclick=sendAIMsg;
-    document.getElementById('aiPrompt').addEventListener('keypress',e=>{if(e.key==='Enter')sendAIMsg();});
-    document.querySelectorAll('.tab-btn').forEach(btn=>{ btn.onclick=()=>{ let tab=btn.dataset.tab; document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); document.getElementById(tab+'Panel')?.classList.add('active'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }; });
-    document.getElementById('actionButtons')?.addEventListener('click',e=>{ let act=e.target.closest('[data-action]'); if(act) modifyScore({vol:7,club:5,eco:18,curfew:-25}[act.dataset.action],act.dataset.action,act.dataset.action,true); });
-    document.getElementById('quickDemo').onclick=()=>{ document.getElementById('loginId').value="demo_student"; document.getElementById('loginPw').value="demo"; showToast("Demo ready"); };
+  function initDarkMode() {
+    let dark = localStorage.getItem('darkMode') === 'true';
+    if(dark) document.body.classList.add('dark');
+    document.getElementById('darkModeToggle').onclick = () => { document.body.classList.toggle('dark'); localStorage.setItem('darkMode', document.body.classList.contains('dark')); };
+  }
+
+  window.onload = () => {
+    initStorage();
+    initDarkMode();
+    let storedId = localStorage.getItem('campusicon_current');
+    if(storedId) currentUser = findUserById(storedId);
+    if(currentUser) { document.getElementById('loginScreen').style.display = 'none'; document.getElementById('dashboard').style.display = 'block'; refreshUI(); }
+    else { document.getElementById('loginScreen').style.display = 'flex'; }
+    document.getElementById('doLoginBtn').onclick = performLogin;
+    document.getElementById('logoutBtn').onclick = logout;
+    document.getElementById('sendAiBtn').onclick = sendAIMsg;
+    document.getElementById('aiPrompt').addEventListener('keypress', e=>{if(e.key==='Enter') sendAIMsg();});
+    document.querySelectorAll('.tab-btn').forEach(btn=>btn.onclick=()=>{ let tab=btn.dataset.tab; document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active')); document.getElementById(tab+'Panel').classList.add('active'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); });
+    document.getElementById('actionButtons').addEventListener('click', e=>{ let btn=e.target.closest('[data-action]'); if(btn) modifyScore({vol:8,club:5,eco:18,lead:12,curfew:-25,disrespect:-60}[btn.dataset.action], btn.innerText.split(' ')[0], btn.dataset.action, true); });
+    document.getElementById('quickDemo').onclick = ()=>{ document.getElementById('loginId').value="demo_student"; document.getElementById('loginPw').value="demo"; showToast("Demo ready"); };
   };
 </script>
 </body>
